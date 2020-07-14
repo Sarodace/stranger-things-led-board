@@ -26,15 +26,15 @@ alphabet = ( ["A",0],
 ["F",5],
 ["G",6],
 ["H",7],
-["I",10],
-["J",11],
-["K",12],
-["L",13],
+["I",18],
+["J",17],
+["K",16],
+["L",15],
 ["M",14],
-["N",15],
-["O",16],
-["P",17],
-["Q",18],
+["N",13],
+["O",12],
+["P",11],
+["Q",10],
 ["R",21],
 ["S",22],
 ["T",23],
@@ -54,25 +54,34 @@ def clearLEDs():
 	pixels.fill(BLANK)
 	sleep(0.5)
 
-# Fill LEDs with appropriate colors
-def displayChristmasLEDS():
-    for i in range(len(pixels)):
-        if i in {0,7,16,25}:
-            pixels[i] = RED
-        if i in {1,10,17,26}:
-            pixels[i] = PURPLE
-        if i in {2,11,18,27}:
-            pixels[i] = CYAN
-        if i in {3,12,21,28}:
-            pixels[i] = PINK
-        if i in {4,13,22,29}:
-            pixels[i] = BLUE
-        if i in {5,14,23}:
-            pixels[i] = YELLOW
-        if i in {6,15,24}:
-            pixels[i] = GREEN
+# Return appropriate color for given LED
+def getLEDColor(index):
+    if index in {0,7,16,25}:
+        return RED
+    if index in {1,10,17,26}:
+        return PURPLE
+    if index in {2,11,18,27}:
+        return CYAN
+    if index in {3,12,21,28}:
+        return PINK
+    if index in {4,13,22,29}:
+        return BLUE
+    if index in {5,14,23}:
+        return YELLOW
+    if index in {6,15,24}:
+        return GREEN
+    else:
+        return BLANK
 
-        sleep (0.1)
+# Fill in LEDs, starting from A to Z
+def displayChristmasLEDs():
+    for i in range(len(pixels)):
+        pixels[i] = getLEDColor(i)
+        sleep(0.1)
+
+# Fill in LED with appropriate color
+def lightLED(index):
+    pixels[index] = getLEDColor(index)
 
 # Flicker the LEDs to alert the user of a received message
 def demogorgonNearby(selectedLED):
@@ -114,16 +123,16 @@ def demogorgonNearby(selectedLED):
     pixels[selectedLED - 1] = BLANK
 
 # Seperate message into underlying characters and display them
-## THIS DOESN'T ACCOUNT FOR SKIPPING LEDS JUST YET
 def deconstructMessage(message):
     for char in message:
         if char.isalpha():
             for item in alphabet:
                 if char in item[0]:
-                    print(char + " " +  str(item[1]))
-                    pixels[item[1]] = GREEN
-                    sleep(0.5)
                     clearLEDs()
+                    print(char + " " +  str(item[1]))
+                    lightLED(item[1])
+                    sleep(0.5)
+    clearLEDs()
 
 
 clearLEDs()
@@ -131,8 +140,8 @@ clearLEDs()
 #while True:
 # 	demogorgonNearby(int(random.uniform(0,30)))
 
-displayChristmasLEDS()
-
+displayChristmasLEDs()
+sleep (1)
 if len(sys.argv) == 2:
     deconstructMessage(str(sys.argv[1]))
 
