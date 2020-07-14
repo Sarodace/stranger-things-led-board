@@ -2,9 +2,11 @@
 import board
 import neopixel
 import random
+import sys
 from time import sleep
 
-# Potential LED colors
+# VARIABLES
+# LED colors
 BLANK = (0, 0, 0)
 RED = (0, 255, 0)
 YELLOW = (150, 255, 0)
@@ -13,6 +15,36 @@ GREEN = (255, 0, 0)
 BLUE = (0, 0, 255)
 PURPLE = (0, 180, 255)
 PINK = (0, 255, 200)
+
+# Alphabet
+## When I trim the LED strip, I'll handle this by subtracting 96 from it's ASCII.
+alphabet = ( ["A",0],
+["B",1],
+["C",2],
+["D",3],
+["E",4],
+["F",5],
+["G",6],
+["H",7],
+["I",10],
+["J",11],
+["K",12],
+["L",13],
+["M",14],
+["N",15],
+["O",16],
+["P",17],
+["Q",18],
+["R",21],
+["S",22],
+["T",23],
+["U",24],
+["V",25],
+["W",26],
+["X",27],
+["Y",28],
+["Z",29] )
+
 
 # Define LEDs that will be used
 pixels = neopixel.NeoPixel(board.D21, 30, brightness = 0.1, auto_write=True)
@@ -81,13 +113,28 @@ def demogorgonNearby(selectedLED):
     pixels[selectedLED] = BLANK
     pixels[selectedLED - 1] = BLANK
 
+# Seperate message into underlying characters and display them
+## THIS DOESN'T ACCOUNT FOR SKIPPING LEDS JUST YET
+def deconstructMessage(message):
+    for char in message:
+        if char.isalpha():
+            for item in alphabet:
+                if char in item[0]:
+                    print(char + " " +  str(item[1]))
+                    pixels[item[1]] = GREEN
+                    sleep(0.5)
+                    clearLEDs()
+
+
 clearLEDs()
 
 #while True:
 # 	demogorgonNearby(int(random.uniform(0,30)))
+
 displayChristmasLEDS()
 
-# TODO: MESSAGE DECOMP
+if len(sys.argv) == 2:
+    deconstructMessage(str(sys.argv[1]))
+
 # TODO: RECEIVE SMS MESSAGE USING TWILIO OR SOME KIND OF IRC
-# TODO: CONVEY MESSAGE USING LEDs
 # TODO: (RELATED TO ABOVE) RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
