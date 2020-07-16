@@ -43,4 +43,10 @@ async def send_message(ctx, arg):
     await ctx.send(arg)
     print(arg)
 
+"""
+Will have a "main.py" file that includes "bot.py" and "LED.py". When I execute that main
+file, not much will happen with the LED board but I'll be able to send commands through
+discord to activate pre-programmed behaviors!
+"""
+
 client.run(os.environ['ST_LED_DISCORD_BOT_KEY'])
