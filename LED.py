@@ -89,26 +89,6 @@ def demogorgonNearby(selectedLED):
     longDelay = int(random.uniform(2.5,10.0))
 
     # FLICKER
-    for i in range(0,2):
-        pixels[selectedLED] = BLANK
-        sleep(0.1)
-        pixels[selectedLED] = GREEN
-        sleep(0.1)
-        pixels[selectedLED] = BLANK
-        sleep(0.15)
-        pixels[selectedLED] = GREEN
-        sleep(0.15)
-        pixels[selectedLED] = BLANK
-        sleep(0.12)
-        pixels[selectedLED] = GREEN
-        sleep(0.12)
-        pixels[selectedLED] = BLANK
-        sleep(0.8)
-        pixels[selectedLED] = GREEN
-        sleep(0.8)
-
-    pixels[selectedLED] = BLANK
-
     for i in range(0,3):
         pixels[selectedLED - 1] = BLANK
         sleep(0.1)
@@ -122,6 +102,29 @@ def demogorgonNearby(selectedLED):
     pixels[selectedLED] = BLANK
     pixels[selectedLED - 1] = BLANK
 
+# INDIVIDUAL FLICKERING
+    # FLICKER
+def firstIndividualFlicker(selectedLED):
+    for i in range(0,2):
+        pixels[selectedLED] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED)
+        sleep(0.1)
+        pixels[selectedLED] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED)
+        sleep(0.15)
+        pixels[selectedLED] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED)
+        sleep(0.12)
+        pixels[selectedLED] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED)
+        sleep(0.4)
+
+    pixels[selectedLED] = BLANK
+
 # Seperate message into underlying characters and display them
 def deconstructMessage(message):
     for char in message:
@@ -131,19 +134,21 @@ def deconstructMessage(message):
                     clearLEDs()
                     print(char + " " +  str(item[1]))
                     lightLED(item[1])
-                    sleep(0.5)
+                    sleep(0.75)
     clearLEDs()
-
 
 clearLEDs()
 
-#while True:
-# 	demogorgonNearby(int(random.uniform(0,30)))
+while True:
+ 	# demogorgonNearby(int(random.uniform(0,30)))
+        firstIndividualFlicker(16)
+        print("loop done!")
+        sleep(2)
 
-displayChristmasLEDs()
-sleep (1)
-if len(sys.argv) == 2:
-    deconstructMessage(str(sys.argv[1]))
+#displayChristmasLEDs()
+#sleep (1)
+#if len(sys.argv) == 2:
+#    deconstructMessage(str(sys.argv[1]))
 
 # TODO: RECEIVE SMS MESSAGE USING TWILIO OR SOME KIND OF IRC
-# TODO: (RELATED TO ABOVE) RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
+# TODO: RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
