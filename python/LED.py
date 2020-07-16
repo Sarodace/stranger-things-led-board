@@ -139,11 +139,11 @@ def deconstructMessage(message):
 
 clearLEDs()
 
-while True:
- 	# demogorgonNearby(int(random.uniform(0,30)))
-        firstIndividualFlicker(16)
-        print("loop done!")
-        sleep(2)
+#while True:
+# 	# demogorgonNearby(int(random.uniform(0,30)))
+#        firstIndividualFlicker(16)
+#        print("loop done!")
+#        sleep(2)
 
 #displayChristmasLEDs()
 #sleep (1)

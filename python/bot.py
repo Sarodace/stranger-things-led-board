@@ -1,10 +1,13 @@
 # LIBRARIES
-import discord
+import LED
 import os
+import discord
 from discord.ext import commands
 
+# SETUP
 client = commands.Bot(command_prefix = '.')
 
+# DISCORD COMMANDS + EVENTS
 @client.event
 async def on_ready():
     print('Bot is ready')
@@ -20,7 +23,7 @@ async def embedt(ctx):
     embed = discord.Embed(
         colour=discord.Colour.blue(),
         title = "Dashboard",
-        description="This is a test"
+        description="This is a test: "
     )
 
     embed.add_field(name="Messages Sent:", value="Yoyo has received and seen xx messages", inline=False)
@@ -40,8 +43,26 @@ async def send_message(ctx, arg):
 
     # Support for "emotions", flash the LEDs in a certain way to make the message
     # more meaningful
-    await ctx.send(arg)
-    print(arg)
+    embed = discord.Embed(
+        colour=discord.Colour.blue(),
+        title = "Outgoing Message",
+        description="Double-check that the message is written exactly as you want it be sent!"
+    )
+
+    embed.add_field(name="You wrote:", value=arg, inline=False)
+    embed.set_footer(text="React with 👍 or 👎 to continue.")
+
+    msg = await ctx.send(embed=embed)
+    emojis = ("👍","👎")
+    for item in emojis:
+        await msg.add_reaction(item)
+
+    LED.deconstructMessage(arg)
+
+@client.command()
+async def christmas(ctx):
+    LED.displayChristmasLEDs()
+
 
 """
 Will have a "main.py" file that includes "bot.py" and "LED.py". When I execute that main
@@ -50,3 +71,4 @@ discord to activate pre-programmed behaviors!
 """
 
 client.run(os.environ['ST_LED_DISCORD_BOT_KEY'])
+
