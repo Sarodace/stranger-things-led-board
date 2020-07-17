@@ -43,32 +43,72 @@ async def send_message(ctx, arg):
 
     # Support for "emotions", flash the LEDs in a certain way to make the message
     # more meaningful
+
+    # Construct embed (briefly)
     embed = discord.Embed(
-        colour=discord.Colour.blue(),
+        colour=discord.Colour.light_grey(),
         title = "Outgoing Message",
         description="Double-check that the message is written exactly as you want it be sent!"
     )
 
+    # Format message
+    if all(x.isalpha() or x.isspace() for x in arg):
+        outbound = arg.upper()
+    else:
+        outbound = "INVALID"
+        warning = "Message contains invalid characters"
+
+    # Construct embed (more in-depth) 
     embed.add_field(name="You wrote:", value=arg, inline=False)
+    embed.add_field(name="Warnings:", value=warning, inline=False)
+    embed.add_field(name="Message to be sent:", value=outbound, inline=False)
+
     embed.set_footer(text="React with 👍 or 👎 to continue.")
 
+    # Send embed
     msg = await ctx.send(embed=embed)
+
+    # Add 👍 and 👎 as reactions
     emojis = ("👍","👎")
     for item in emojis:
         await msg.add_reaction(item)
 
-    LED.deconstructMessage(arg)
+    # Check for response
+    def check(reaction, user):
+        return user == ctx.message.author and str(reaction.emoji) in emojis
+
+    reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+
+    # Send different embeds depending on which response was selected
+    if (reaction.emoji == "👍"):
+        # Eventually invoke flickering and that kinda stuff
+        success_embed = discord.Embed(
+            colour=discord.Colour.green(),
+            title = "Message Sent!",
+            description="Message succesfully sent at XX:XX:XX"
+        )
+
+        success_embed.add_field(name="Message contents:", value=outbound, inline=False)
+
+        await msg.edit(embed = success_embed)
+
+        LED.deconstructMessage(outbound)
+
+    if (reaction.emoji == "👎"):
+        failed_embed = discord.Embed(
+            colour=discord.Colour.red(),
+            title = "Message not sent!",
+            description="Message was not sent"
+        )
+
+        failed_embed.add_field(name="Message contents:", value=arg, inline=False)
+
+        await msg.edit(embed = failed_embed)
 
 @client.command()
 async def christmas(ctx):
     LED.displayChristmasLEDs()
 
-
-"""
-Will have a "main.py" file that includes "bot.py" and "LED.py". When I execute that main
-file, not much will happen with the LED board but I'll be able to send commands through
-discord to activate pre-programmed behaviors!
-"""
 
 client.run(os.environ['ST_LED_DISCORD_BOT_KEY'])
 
