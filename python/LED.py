@@ -126,7 +126,7 @@ def firstIndividualFlicker(selectedLED):
     pixels[selectedLED] = BLANK
 
 # Seperate message into underlying characters and display them
-def deconstructMessage(message):
+def deconstruct_message(message):
     for char in message:
         if char.isalpha():
             for item in alphabet:
