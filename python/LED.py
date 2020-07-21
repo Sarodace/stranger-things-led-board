@@ -102,9 +102,8 @@ def demogorgonNearby(selectedLED):
     pixels[selectedLED] = BLANK
     pixels[selectedLED - 1] = BLANK
 
-# INDIVIDUAL FLICKERING
-    # FLICKER
-def firstIndividualFlicker(selectedLED):
+# FLICKERING ANIMATIONS
+def firstFlicker(selectedLED):
     for i in range(0,2):
         pixels[selectedLED] = BLANK
         sleep(0.1)
@@ -125,6 +124,30 @@ def firstIndividualFlicker(selectedLED):
 
     pixels[selectedLED] = BLANK
 
+# Flicker the LEDs to alert the user of a received message
+def secondFlicker(selectedLED):
+    for i in range(0,3):
+        pixels[selectedLED - 1] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED - 1)
+        sleep(0.1)
+        pixels[selectedLED] = BLANK
+        sleep(0.1)
+        lightLED(selectedLED)
+        sleep(0.1)
+
+    pixels[selectedLED] = BLANK
+    pixels[selectedLED - 1] = BLANK
+
+def thirdFlicker(selectedLED):
+    for i in range(0,10):
+        pixels[selectedLED - 1] = BLANK
+        sleep(1.01 - 0.1 * i)
+        lightLED(selectedLED - 1)
+        sleep(1.01 - 0.1 * i)
+
+
+
 # Seperate message into underlying characters and display them
 def deconstruct_message(message):
     for char in message:
@@ -139,16 +162,12 @@ def deconstruct_message(message):
 
 clearLEDs()
 
-#while True:
-# 	# demogorgonNearby(int(random.uniform(0,30)))
-#        firstIndividualFlicker(16)
-#        print("loop done!")
-#        sleep(2)
+if __name__ == "__main__":
+    while True:
+        firstFlicker(16)
+        secondFlicker(16)
+        thirdFlicker(16)
+        print("loop done!")
+        sleep(2)
 
-#displayChristmasLEDs()
-#sleep (1)
-#if len(sys.argv) == 2:
-#    deconstructMessage(str(sys.argv[1]))
-
-# TODO: RECEIVE SMS MESSAGE USING TWILIO OR SOME KIND OF IRC
 # TODO: RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
