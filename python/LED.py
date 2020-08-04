@@ -1,11 +1,12 @@
-# LIBRARIES
+## LIBRARIES
 import board
 import neopixel
 import random
 import sys
 from time import sleep
 
-# VARIABLES
+
+## VARIABLES
 # LED colors
 BLANK = (0, 0, 0)
 RED = (0, 255, 0)
@@ -16,9 +17,8 @@ BLUE = (0, 0, 255)
 PURPLE = (0, 180, 255)
 PINK = (0, 255, 200)
 
-# Alphabet
-## When I trim the LED strip, I'll handle this by subtracting 96 from it's ASCII.
-alphabet = ( ["A",0],
+# Alphabetical characters and their respective LEDs
+alphabet = (["A",0],
 ["B",1],
 ["C",2],
 ["D",3],
@@ -45,14 +45,14 @@ alphabet = ( ["A",0],
 ["Y",28],
 ["Z",29] )
 
-
 # Define LEDs that will be used
 pixels = neopixel.NeoPixel(board.D21, 30, brightness = 0.1, auto_write=True)
 
-# Clear any LED colors
+
+## FUNCTIONS 
+# Set all LEDs to off
 def clearLEDs():
 	pixels.fill(BLANK)
-	sleep(0.5)
 
 # Return appropriate color for given LED
 def getLEDColor(index):
@@ -83,28 +83,23 @@ def displayChristmasLEDs():
 def lightLED(index):
     pixels[index] = getLEDColor(index)
 
-# Flicker the LEDs to alert the user of a received message
-def demogorgonNearby(selectedLED):
-    shortDelay = int(random.uniform(0,1))
-    longDelay = int(random.uniform(2.5,10.0))
+# Seperate message into underlying characters and display them
+def deconstruct_message(message):
+    for char in message:
+        if char.isalpha(): # this if statement should probably be removed
+            for item in alphabet:
+                if char in item[0]:
+                    clearLEDs()
+                    print(char + " " +  str(item[1]))
+                    lightLED(item[1])
+                    sleep(0.75)
+    clearLEDs()
 
-    # FLICKER
-    for i in range(0,3):
-        pixels[selectedLED - 1] = BLANK
-        sleep(0.1)
-        pixels[selectedLED - 1] = GREEN
-        sleep(0.1)
-        pixels[selectedLED] = BLANK
-        sleep(0.1)
-        pixels[selectedLED] = GREEN
-        sleep(0.1)
 
-    pixels[selectedLED] = BLANK
-    pixels[selectedLED - 1] = BLANK
-
-# FLICKERING ANIMATIONS
+## FLICKERING ANIMATIONS
+# The following functions willl be used to alert the user of a received message by flickering the LEDs
 def firstFlicker(selectedLED):
-    for i in range(0,2):
+    for i in range(0, 2):
         pixels[selectedLED] = BLANK
         sleep(0.1)
         lightLED(selectedLED)
@@ -124,9 +119,8 @@ def firstFlicker(selectedLED):
 
     pixels[selectedLED] = BLANK
 
-# Flicker the LEDs to alert the user of a received message
 def secondFlicker(selectedLED):
-    for i in range(0,3):
+    for i in range(0, 3):
         pixels[selectedLED - 1] = BLANK
         sleep(0.1)
         lightLED(selectedLED - 1)
@@ -140,34 +134,22 @@ def secondFlicker(selectedLED):
     pixels[selectedLED - 1] = BLANK
 
 def thirdFlicker(selectedLED):
-    for i in range(0,10):
+    for i in range(0, 10):
         pixels[selectedLED - 1] = BLANK
         sleep(1.01 - 0.1 * i)
         lightLED(selectedLED - 1)
         sleep(1.01 - 0.1 * i)
 
 
-
-# Seperate message into underlying characters and display them
-def deconstruct_message(message):
-    for char in message:
-        if char.isalpha():
-            for item in alphabet:
-                if char in item[0]:
-                    clearLEDs()
-                    print(char + " " +  str(item[1]))
-                    lightLED(item[1])
-                    sleep(0.75)
-    clearLEDs()
-
 clearLEDs()
 
+# This'll change a bunch as I'm playing around with the flickering animations
 if __name__ == "__main__":
+    # TODO: RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
+
     while True:
         firstFlicker(16)
         secondFlicker(16)
         thirdFlicker(16)
         print("loop done!")
         sleep(2)
-
-# TODO: RANDOMLY PICK FROM MANY FLICKER FUNCTIONS
